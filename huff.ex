@@ -72,7 +72,7 @@ end
 def encode([],_,encoded_table), do: encoded_table
 
 ##helper function that searches the table to see if the char is inside#########
-def lookup(_,[]) do [404] end
+def lookup(_,[]) do "no table to search from" end
 def lookup(char,[{c,bits}|_]) when char == c do bits end
 def lookup(char,[_|t]), do: lookup(char,t)
 
