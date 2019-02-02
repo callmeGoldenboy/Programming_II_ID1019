@@ -1,4 +1,8 @@
 defmodule Huff do
+
+
+  ### a node looks like this {freq,left,right}
+  ### a leaf looks like this {char,freq}
   def sample do
 'the quick brown fox jumps over the lazy dog
 this is a sample text that we will use when we build
@@ -37,6 +41,51 @@ def build_tree([first,second | restofsorted]) do
   build_tree(newListSorted)
 end
 
+
+def freq(sample) do
+freq(sample, [])
+end
+def freq([], freq) do
+freq
+end
+def freq([char | rest], freq) do
+freq(rest, charcounter(char,freq))
+end
+
+
+def encode_table(tree), do: encode_table(tree, [], [])
+def encode_table({_,left,right},table,path) do
+  table = encode_table(left,table,[0|path])
+  table = encode_table(right,table,[1|path])
+  table
+end
+def encode_table({char,_},mapping,path) do
+  [{char,Enum.reverse(path)} | mapping]
+end
+def encode(text,table), do: encode(text,table,[])
+
+def encode([h|t],[h1 | t1] = table,encoded_table) do
+ encoded_table = encoded_table ++ lookup(h,table)
+ encode(t,table,encoded_table)
+
+end
+def encode([],_,encoded_table), do: encoded_table
+
+##helper function that searches the table to see if the char is inside#########
+def lookup(_,[]) do [404] end
+def lookup(char,[{c,bits}|_]) when char == c do bits end
+def lookup(char,[_|t]), do: lookup(char,t)
+
+def decode_table(tree) do
+  # To implement...
+end
+
+def decode(seq, tree) do
+# To implement...
+end
+
+
+#####helper fucton for insertionsort that inserts the element at the right index########
 def insertRight({freq,left,right}= l,[{f,_,_} = h | t]) do
   cond do
     freq < f -> [l, h | t]
@@ -77,15 +126,6 @@ def insert_leaf({freq2,left,right}=l,{char,freq}) do
   end
 end
 
-def freq(sample) do
-freq(sample, [])
-end
-def freq([], freq) do
-freq
-end
-def freq([char | rest], freq) do
-freq(rest, charcounter(char,freq))
-end
 ###### charcounter##########
 def charcounter(char, []) do
   [{char, 1}]
@@ -121,21 +161,5 @@ isort(t1,insertf([h1],sorted))
 end
 
 
-
-
-
-
-def encode_table(tree) do
-
-end
-def decode_table(tree) do
-  # To implement...
-end
-def encode(text, table) do
-# To implement...
-end
-def decode(seq, tree) do
-# To implement...
-end
 
 end
