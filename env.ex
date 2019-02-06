@@ -3,6 +3,9 @@ defmodule Env do
   def add(id,str,env) do
     [{id,str}] ++ env
   end
+  def lookup(id,[]) do
+    nil
+  end
   def lookup(id,[{var,str}|[]]) do
     cond do
       id == var -> {id,str}
@@ -26,13 +29,6 @@ defmodule Env do
     newEnv = MapSet.difference(map1,map2)
     MapSet.to_list(newEnv)
   end
-  def remove_elem({e,_} = l,env)do
-    map = MapSet.new(env)
-    newEnv = MapSet.delete(map,l)
-    MapSet.to_list(newEnv)
-
-  end
-
 
 
 end
