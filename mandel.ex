@@ -86,12 +86,12 @@ defmodule Color do
     x = trunc(a)
     y = trunc(255 * (a - x))
     case x do
-      0 -> {:rgb,y,0,0}
-      1 -> {:rgb,255,y, 0}
-      2 -> {:rgb,255 - y, 255, 0}
-      3 -> {:rgb,0, 255, y}
-      4 -> {:rgb,0, 255 - y, 255}
-      5 -> {:rgb,0,y,255}
+      0 -> {:rgb,255,255,255}
+      1 -> {:rgb,0,255,255}
+      2 -> {:rgb,255 ,0, 255}
+      3 -> {:rgb,0, 255, 0}
+      4 -> {:rgb,0, 255 , 255}
+      5 -> {:rgb,0,0,255}
     end
   end
 end
@@ -105,8 +105,8 @@ defmodule Mandel do
    rows(width, height, trans, depth, [])
  end
 
-
  def rows(_,0,_,_,acc) do acc end
+
  def rows(width,height,trans,depth,rowList) do
    rows(width,height-1,trans,depth,[eachRow(width,height,trans,depth,[]) | rowList])
  end
