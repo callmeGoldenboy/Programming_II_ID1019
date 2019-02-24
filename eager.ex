@@ -21,8 +21,8 @@ def eval_expr({:cons, first, second}, env) do
       case eval_expr(second, env) do
         :error ->
           :error
-        {:ok, ts} ->
-          {:ok,{str,ts}}
+        {:ok, str2} ->
+          {:ok,{str,str2}}
       end
   end
 end
@@ -56,8 +56,12 @@ def eval_match({:cons, first, second}, {:cons,{_,val},{_,val2}}, env) do
   case eval_match(first, val, env) do
     :fail ->
       :fail
-    {_,envoirment} ->
-      eval_match(second,val2, env)
+    {:ok,newenvoirment} ->
+      case eval_match(second,val2, newenvoirment) do
+        :fail -> :fail
+        {:ok,newEnv} -> {:ok,newEnv}
+
+      end
   end
 end
 def eval_match(_, _, _) do
@@ -68,7 +72,10 @@ def eval_seq([exp], env) do
   eval_expr(exp,env)
 end
 def eval()  do
-  seq = [{:match, {:var, :x}, {:atm,:a}}]
+  seq = [{:match, {:var, :x}, {:atm,:a}},
+        {:match, {:var, :y}, {:cons, {:var, :x}, {:atm, :b}}},
+        {:match, {:cons, :ignore, {:var, :z}}, {:var, :y}},
+        {:var, :z}]
   eval_seq(seq,Env.new())
 end
 def eval_seq([{:match,firstE, secondE} | exp], env) do
@@ -81,9 +88,9 @@ def eval_seq([{:match,firstE, secondE} | exp], env) do
       :error
     {:ok,str} ->
       vars = extract_vars(firstE)
-      env = Env.remove(vars, env)
+      env2 = Env.remove(vars, env)
 
-      case eval_match(firstE, str, env) do
+      case eval_match(firstE, str, env2) do
         :fail ->
           :error2
         {:ok, newEnv} ->
