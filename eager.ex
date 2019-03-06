@@ -41,7 +41,7 @@ def eval_match({:var, id}, str, env) do
       {:ok, Env.add(id,str,env)}
     {_, ^str} ->
       {:ok,env}
-    {_, _} ->
+    {id, _} ->
       :fail
   end
 end
